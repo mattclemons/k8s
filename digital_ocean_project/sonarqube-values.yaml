@@ -1,0 +1,48 @@
+postgresql:
+  postgresqlUsername: "sonarqube"
+  postgresqlPassword: "sonarqube123"
+  postgresqlDatabase: "sonarqube"
+
+service:
+  type: LoadBalancer
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+  limits:
+    cpu: "1"
+    memory: "2Gi"
+
+deployment:
+  containers:
+    - name: sonarqube
+      image: sonarqube:10.7.0-community
+      ports:
+        - containerPort: 9000
+      livenessProbe:
+        httpGet:
+          path: /api/system/liveness
+          port: 9000
+        initialDelaySeconds: 60
+        periodSeconds: 30
+        timeoutSeconds: 5
+        failureThreshold: 3
+
+      readinessProbe:
+        httpGet:
+          path: /api/system/status
+          port: 9000
+        initialDelaySeconds: 60
+        periodSeconds: 30
+        timeoutSeconds: 5
+        failureThreshold: 3
+
+      startupProbe:
+        httpGet:
+          path: /api/system/status
+          port: 9000
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        timeoutSeconds: 1
+        failureThreshold: 24
