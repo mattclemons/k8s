@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transcriber-backend
+  labels:
+    app: transcriber-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: transcriber-backend
+  template:
+    metadata:
+      labels:
+        app: transcriber-backend
+    spec:
+      containers:
+      - name: transcriber-backend
+        image: mattclemons/transcriber-backend:latest
+        ports:
+        - containerPort: 8000

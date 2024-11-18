@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transcriber-frontend
+  labels:
+    app: transcriber-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transcriber-frontend
+  template:
+    metadata:
+      labels:
+        app: transcriber-frontend
+    spec:
+      containers:
+      - name: transcriber-frontend
+        image: mattclemons/transcriber-frontend:latest
+        ports:
+        - containerPort: 3000
+          hostPort: 3000  # Bind directly to port 3000
+        env:
+        - name: BACKEND_URL
+          value: "http://transcriber-backend:8000"
